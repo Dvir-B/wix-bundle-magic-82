@@ -22,31 +22,31 @@ const Header = () => {
   }, [scrolled]);
 
   const navigationItems = [
-    { path: "/", label: "Dashboard", icon: LayoutGrid },
-    { path: "/bundles", label: "Bundles", icon: Package },
-    { path: "/create-bundle", label: "Create Bundle", icon: PlusCircle },
+    { path: "/", label: "דשבורד", icon: LayoutGrid },
+    { path: "/bundles", label: "חבילות", icon: Package },
+    { path: "/create-bundle", label: "יצירת חבילה", icon: PlusCircle },
   ];
 
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-12",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 md:px-8",
         scrolled 
-          ? "py-3 bg-white/80 backdrop-blur-md border-b border-border shadow-sm" 
-          : "py-5 bg-transparent"
+          ? "py-2 bg-white shadow-sm border-b border-wixGray" 
+          : "py-3 bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <AnimatedContainer animation="fade-in">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+          <Link to="/" className="flex items-center space-x-2 rtl:space-x-reverse">
+            <div className="w-8 h-8 rounded-md bg-wixBlue flex items-center justify-center">
               <Package size={18} className="text-white" />
             </div>
-            <span className="font-semibold text-xl hidden sm:inline-block">WixBundles</span>
+            <span className="font-medium text-lg hidden sm:inline-block text-wixDarkBlue">וויקס חבילות</span>
           </Link>
         </AnimatedContainer>
 
-        <nav className="flex items-center space-x-1">
+        <nav className="flex items-center space-x-1 rtl:space-x-reverse">
           {navigationItems.map((item, index) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
@@ -60,14 +60,14 @@ const Header = () => {
                 <Link
                   to={item.path}
                   className={cn(
-                    "px-3 py-2 rounded-md flex items-center space-x-1 transition-all hover:bg-accent",
+                    "px-3 py-2 rounded-md flex items-center space-x-1 rtl:space-x-reverse transition-all text-sm",
                     isActive 
-                      ? "bg-accent text-primary font-medium" 
-                      : "text-muted-foreground"
+                      ? "bg-wixLightBlue text-wixBlue font-medium" 
+                      : "text-wixDarkGray hover:bg-wixGray"
                   )}
                 >
                   <Icon size={16} />
-                  <span className="hidden md:inline-block text-sm">{item.label}</span>
+                  <span className="hidden md:inline-block">{item.label}</span>
                 </Link>
               </AnimatedContainer>
             );

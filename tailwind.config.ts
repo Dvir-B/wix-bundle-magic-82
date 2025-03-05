@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -20,10 +19,19 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['SF Pro Display', 'system-ui', 'sans-serif'],
+				sans: ['Madefor', 'system-ui', 'sans-serif'],
 				mono: ['SF Mono', 'monospace'],
 			},
 			colors: {
+				wixBlue: '#3899EC',
+				wixPurple: '#8B5CF6',
+				wixDarkBlue: '#162D3D',
+				wixLightBlue: '#D3EDFF',
+				wixGray: '#F0F4F7',
+				wixDarkGray: '#577083',
+				wixGreen: '#38BFA1',
+				wixRed: '#EE5951',
+				wixYellow: '#FFCB46',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

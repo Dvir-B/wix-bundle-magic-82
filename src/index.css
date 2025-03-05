@@ -5,35 +5,36 @@
 
 @layer base {
   :root {
+    /* Wix inspired CSS variables */
     --background: 210 33% 99%;
-    --foreground: 220 14% 10%;
+    --foreground: 200 20% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 14% 10%;
+    --card-foreground: 200 20% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 14% 10%;
+    --popover-foreground: 200 20% 16%;
 
-    --primary: 220 70% 50%;
+    --primary: 200 80% 58%;
     --primary-foreground: 210 33% 99%;
 
     --secondary: 210 20% 96%;
-    --secondary-foreground: 220 14% 10%;
+    --secondary-foreground: 200 20% 16%;
 
     --muted: 210 20% 96%;
-    --muted-foreground: 220 10% 40%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 220 70% 97%;
-    --accent-foreground: 220 70% 50%;
+    --accent: 211 100% 95%;
+    --accent-foreground: 200 80% 58%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 33% 99%;
 
-    --border: 220 14% 90%;
-    --input: 220 14% 90%;
-    --ring: 220 70% 50%;
+    --border: 211 25% 91%;
+    --input: 211 25% 91%;
+    --ring: 200 80% 58%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5% 26%;
@@ -46,33 +47,33 @@
   }
 
   .dark {
-    --background: 220 14% 10%;
+    --background: 200 19% 18%;
     --foreground: 210 33% 99%;
 
-    --card: 220 14% 12%;
+    --card: 200 19% 18%;
     --card-foreground: 210 33% 99%;
 
-    --popover: 220 14% 12%;
+    --popover: 200 19% 18%;
     --popover-foreground: 210 33% 99%;
 
-    --primary: 220 70% 50%;
+    --primary: 200 80% 58%;
     --primary-foreground: 210 33% 99%;
 
-    --secondary: 220 14% 18%;
+    --secondary: 200 20% 22%;
     --secondary-foreground: 210 33% 99%;
 
-    --muted: 220 14% 18%;
-    --muted-foreground: 220 10% 70%;
+    --muted: 200 20% 22%;
+    --muted-foreground: 215 16% 65%;
 
-    --accent: 220 70% 25%;
+    --accent: 200 100% 30%;
     --accent-foreground: 210 33% 99%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 210 33% 99%;
 
-    --border: 220 14% 20%;
-    --input: 220 14% 20%;
-    --ring: 220 70% 50%;
+    --border: 215 14% 25%;
+    --input: 215 14% 25%;
+    --ring: 200 80% 58%;
   }
 }
 
@@ -88,38 +89,54 @@
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
-  /* Custom Glass Effect */
+  /* Wix-like Glass Effect */
   .glass {
-    @apply bg-white/70 backdrop-blur-md border border-white/20;
+    @apply bg-white/80 backdrop-blur-md border border-wixGray;
   }
 
   .dark .glass {
     @apply bg-black/30 backdrop-blur-md border border-white/10;
   }
 
-  /* Image Loading Effect */
-  .image-loading {
-    @apply relative overflow-hidden bg-muted;
+  /* Wix-like Buttons */
+  .wix-button-primary {
+    @apply bg-wixBlue text-white hover:bg-opacity-80 transition-colors rounded-md px-4 py-2 font-medium;
   }
 
-  .image-loading::after {
-    content: "";
-    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent;
-    animation: shimmer 1.5s infinite;
+  .wix-button-secondary {
+    @apply bg-wixGray text-wixDarkBlue hover:bg-opacity-80 transition-colors rounded-md px-4 py-2 font-medium;
   }
 
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+  .wix-button-danger {
+    @apply bg-wixRed text-white hover:bg-opacity-80 transition-colors rounded-md px-4 py-2 font-medium;
   }
 
-  /* Smooth Transition */
-  .page-transition {
-    @apply transition-all duration-300 ease-in-out;
+  /* Wix-like Cards */
+  .wix-card {
+    @apply bg-white rounded-lg border border-wixGray shadow-sm;
   }
 
-  /* Focus Styles */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
-  }
+  /* ... keep existing code (the remaining utility classes) */
+}
+
+/* Add Wix Madefor font */
+@font-face {
+  font-family: 'Madefor';
+  src: url('https://static.parastorage.com/services/third-party/fonts/Wix_Madefor/wixMadeforTextRegular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Madefor';
+  src: url('https://static.parastorage.com/services/third-party/fonts/Wix_Madefor/wixMadeforTextBold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Madefor';
+  src: url('https://static.parastorage.com/services/third-party/fonts/Wix_Madefor/wixMadeforTextMedium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
 }
