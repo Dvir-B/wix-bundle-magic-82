@@ -1,0 +1,47 @@
+
+{
+  "name": "wix-bundle-magic",
+  "version": "1.0.0",
+  "modules": {
+    "pages": {
+      "pages": [
+        {
+          "name": "Bundles Dashboard",
+          "url": "/bundles"
+        },
+        {
+          "name": "Create Bundle",
+          "url": "/create-bundle"
+        }
+      ]
+    },
+    "settings": {
+      "specs": {
+        "sections": [
+          {
+            "title": "General Settings",
+            "settings": [
+              {
+                "name": "currencySymbol",
+                "type": "string",
+                "label": "Currency Symbol",
+                "defaultValue": "$",
+                "required": true
+              },
+              {
+                "name": "defaultDiscountPercentage",
+                "type": "number",
+                "label": "Default Discount Percentage",
+                "defaultValue": 10,
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "scopes": [
+    "manage-products"
+  ]
+}

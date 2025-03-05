@@ -185,5 +185,3 @@ const BundleCard: React.FC<BundleCardProps> = ({
 };
 
 export default BundleCard;
-
-<lov-add-dependency>framer-motion@latest</lov-add-dependency>
