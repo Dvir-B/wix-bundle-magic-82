@@ -1,5 +1,5 @@
 
-import { Package, DollarSign } from "lucide-react";
+import { Package } from "lucide-react";
 import { Product } from "@/components/BundleCard";
 import { calculateDiscountedPrice, calculateSavings } from "@/utils/bundleUtils";
 
@@ -8,13 +8,15 @@ interface BundleSummaryProps {
   selectedProducts: Product[];
   discountPercentage: number;
   isActive: boolean;
+  formatPrice?: (price: number) => string;
 }
 
 const BundleSummary: React.FC<BundleSummaryProps> = ({
   bundleName,
   selectedProducts,
   discountPercentage,
-  isActive
+  isActive,
+  formatPrice = (price) => `$${price.toFixed(2)}`
 }) => {
   const totalOriginalPrice = selectedProducts.reduce(
     (sum, product) => sum + product.price,
@@ -23,10 +25,6 @@ const BundleSummary: React.FC<BundleSummaryProps> = ({
   
   const discountedPrice = calculateDiscountedPrice(selectedProducts, discountPercentage);
   const savingsAmount = calculateSavings(selectedProducts, discountPercentage);
-  
-  const formatPrice = (price: number) => {
-    return `$${price.toFixed(2)}`;
-  };
   
   return (
     <div className="bg-accent/50 rounded-lg p-6 sticky top-28">

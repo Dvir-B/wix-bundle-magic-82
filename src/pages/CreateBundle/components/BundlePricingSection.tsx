@@ -10,12 +10,14 @@ interface BundlePricingSectionProps {
   selectedProducts: Product[];
   discountPercentage: number;
   setDiscountPercentage: (discount: number) => void;
+  formatPrice?: (price: number) => string;
 }
 
 const BundlePricingSection: React.FC<BundlePricingSectionProps> = ({
   selectedProducts,
   discountPercentage,
-  setDiscountPercentage
+  setDiscountPercentage,
+  formatPrice = (price) => `$${price.toFixed(2)}`
 }) => {
   const totalOriginalPrice = selectedProducts.reduce(
     (sum, product) => sum + product.price,
@@ -24,10 +26,6 @@ const BundlePricingSection: React.FC<BundlePricingSectionProps> = ({
   
   const discountedPrice = calculateDiscountedPrice(selectedProducts, discountPercentage);
   const savingsAmount = calculateSavings(selectedProducts, discountPercentage);
-  
-  const formatPrice = (price: number) => {
-    return `$${price.toFixed(2)}`;
-  };
 
   return (
     <>

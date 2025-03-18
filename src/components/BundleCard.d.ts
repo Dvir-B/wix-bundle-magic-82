@@ -1,12 +1,10 @@
 
 export interface ProductVariant {
   id: string;
-  attributes: {
-    [key: string]: string;
-  };
+  attributes: { [key: string]: string };
   inStock: boolean;
   quantity: number;
-  price?: number; // אופציונלי - רק בגרסה V3 יש מחיר לווריאנט
+  price?: number;
 }
 
 export interface Product {
@@ -14,7 +12,7 @@ export interface Product {
   name: string;
   price: number;
   imageUrl: string;
-  variants?: ProductVariant[]; // הוספת תמיכה בווריאנטים
+  variants?: ProductVariant[];
 }
 
 export interface Bundle {

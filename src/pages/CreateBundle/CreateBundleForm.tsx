@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import AnimatedContainer from "@/components/AnimatedContainer";
 import { Product } from "@/components/BundleCard";
-import { generateMockProducts, generateId } from "@/utils/bundleUtils";
+import { generateId, calculateDiscountedPrice, calculateSavings } from "@/utils/bundleUtils";
+import { saveBundle } from "@/utils/wixUtils";
 
 import BundlePreviewDialog from "./components/BundlePreviewDialog";
 import BundleDetailsSection from "./components/BundleDetailsSection";
@@ -17,13 +18,26 @@ import BundlePricingSection from "./components/BundlePricingSection";
 import BundleStatusSection from "./components/BundleStatusSection";
 import BundleSummary from "./components/BundleSummary";
 
-const CreateBundleForm = () => {
+interface CreateBundleFormProps {
+  availableProducts: Product[];
+  wixSettings: {
+    currencySymbol?: string;
+    defaultDiscountPercentage?: number;
+  } | null;
+}
+
+const CreateBundleForm: React.FC<CreateBundleFormProps> = ({ 
+  availableProducts = [],
+  wixSettings = null
+}) => {
   const navigate = useNavigate();
-  const [availableProducts] = useState<Product[]>(generateMockProducts(20));
+  const defaultDiscount = wixSettings?.defaultDiscountPercentage || 10;
+  const currencySymbol = wixSettings?.currencySymbol || '$';
+  
   const [bundleName, setBundleName] = useState("");
   const [bundleDescription, setBundleDescription] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [discountPercentage, setDiscountPercentage] = useState(10);
+  const [discountPercentage, setDiscountPercentage] = useState(defaultDiscount);
   const [isActive, setIsActive] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -50,23 +64,22 @@ const CreateBundleForm = () => {
     setPreviewOpen(true);
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!bundleName.trim()) {
-      toast.error("Please enter a bundle name");
+      toast.error("נא להזין שם לחבילה");
       return;
     }
     
     if (selectedProducts.length < 2) {
-      toast.error("Please select at least 2 products for the bundle");
+      toast.error("נא לבחור לפחות 2 מוצרים לחבילה");
       return;
     }
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
       // Create new bundle
       const newBundle = {
         id: generateId(),
@@ -75,12 +88,24 @@ const CreateBundleForm = () => {
         products: selectedProducts,
         discountPercentage,
         active: isActive,
+        createdDate: new Date().toISOString(),
       };
       
-      toast.success("Bundle created successfully");
+      // Save bundle to Wix
+      const result = await saveBundle(newBundle);
+      
+      if (result.success) {
+        toast.success("החבילה נוצרה בהצלחה");
+        navigate("/bundles");
+      } else {
+        throw new Error("שגיאה ביצירת החבילה");
+      }
+    } catch (error) {
+      console.error("Error creating bundle:", error);
+      toast.error("שגיאה ביצירת החבילה. נסה שוב מאוחר יותר.");
+    } finally {
       setIsSubmitting(false);
-      navigate("/bundles");
-    }, 800);
+    }
   };
   
   // Create a preview bundle object
@@ -91,6 +116,11 @@ const CreateBundleForm = () => {
     products: selectedProducts,
     discountPercentage,
     active: isActive,
+  };
+  
+  // Format price display with currency symbol from settings
+  const formatCurrencyPrice = (price: number) => {
+    return `${currencySymbol}${price.toFixed(2)}`;
   };
   
   return (
@@ -137,6 +167,7 @@ const CreateBundleForm = () => {
                   selectedProducts={selectedProducts}
                   discountPercentage={discountPercentage}
                   setDiscountPercentage={setDiscountPercentage}
+                  formatPrice={formatCurrencyPrice}
                 />
                 
                 <BundleStatusSection 
@@ -186,6 +217,7 @@ const CreateBundleForm = () => {
                   selectedProducts={selectedProducts}
                   discountPercentage={discountPercentage}
                   isActive={isActive}
+                  formatPrice={formatCurrencyPrice}
                 />
               </AnimatedContainer>
             </div>

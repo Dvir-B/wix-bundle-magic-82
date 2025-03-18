@@ -7,11 +7,15 @@
       "pages": [
         {
           "name": "Bundles Dashboard",
-          "url": "/bundles"
+          "url": "/bundles",
+          "seoTitle": "Manage Product Bundles",
+          "seoDescription": "Create and manage product bundles for your Wix store"
         },
         {
           "name": "Create Bundle",
-          "url": "/create-bundle"
+          "url": "/create-bundle",
+          "seoTitle": "Create New Bundle",
+          "seoDescription": "Create a new product bundle for your Wix store"
         }
       ]
     },
@@ -42,6 +46,16 @@
     }
   },
   "scopes": [
-    "manage-products"
-  ]
+    "manage-products",
+    "read-catalog",
+    "read-products",
+    "write-products"
+  ],
+  "capabilities": {
+    "dataHooks": {
+      "bundles": {
+        "description": "Store and manage product bundles"
+      }
+    }
+  }
 }

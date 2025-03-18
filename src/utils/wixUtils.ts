@@ -1,6 +1,6 @@
 
 import { generateMockProducts } from './bundleUtils';
-import type { Product } from '../components/BundleCard';
+import type { Product, ProductVariant } from '../components/BundleCard';
 
 /**
  * Utility functions for Wix API integration
@@ -31,7 +31,7 @@ export const getWixSettings = (): Promise<any> => {
 
 // Format a Catalog V1 product to our app's format
 const formatV1Product = (product: any): Product => {
-  const baseProduct = {
+  const baseProduct: Product = {
     id: product._id,
     name: product.name,
     price: product.price,
@@ -40,15 +40,12 @@ const formatV1Product = (product: any): Product => {
   
   // הוספת תמיכה בווריאנטים עבור Catalog V1
   if (product.variants && product.variants.length > 0) {
-    return {
-      ...baseProduct,
-      variants: product.variants.map((variant: any) => ({
-        id: variant.variantId,
-        attributes: variant.attributes,
-        inStock: variant.inStock,
-        quantity: variant.quantity
-      }))
-    };
+    baseProduct.variants = product.variants.map((variant: any): ProductVariant => ({
+      id: variant.variantId,
+      attributes: variant.attributes,
+      inStock: variant.inStock,
+      quantity: variant.quantity
+    }));
   }
   
   return baseProduct;
@@ -56,7 +53,7 @@ const formatV1Product = (product: any): Product => {
 
 // Format a Catalog V3 product to our app's format
 const formatV3Product = (product: any): Product => {
-  const baseProduct = {
+  const baseProduct: Product = {
     id: product.id,
     name: product.name,
     price: product.price.price,
@@ -65,16 +62,13 @@ const formatV3Product = (product: any): Product => {
   
   // הוספת תמיכה בווריאנטים עבור Catalog V3
   if (product.variants && product.variants.length > 0) {
-    return {
-      ...baseProduct,
-      variants: product.variants.map((variant: any) => ({
-        id: variant.id,
-        attributes: variant.choices, // בגרסה V3 זה נקרא choices במקום attributes
-        inStock: variant.stock.inStock,
-        quantity: variant.stock.quantity,
-        price: variant.variant_price?.price // V3 תומך במחירים שונים לווריאנטים
-      }))
-    };
+    baseProduct.variants = product.variants.map((variant: any): ProductVariant => ({
+      id: variant.id,
+      attributes: variant.choices, // בגרסה V3 זה נקרא choices במקום attributes
+      inStock: variant.stock.inStock,
+      quantity: variant.stock.quantity,
+      price: variant.variant_price?.price // V3 תומך במחירים שונים לווריאנטים
+    }));
   }
   
   return baseProduct;
