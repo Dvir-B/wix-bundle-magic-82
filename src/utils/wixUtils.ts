@@ -30,20 +30,55 @@ export const getWixSettings = (): Promise<any> => {
 };
 
 // Format a Catalog V1 product to our app's format
-const formatV1Product = (product: any): Product => ({
-  id: product._id,
-  name: product.name,
-  price: product.price,
-  imageUrl: product.mediaItems?.[0]?.url || 'https://placehold.co/200x200/jpg'
-});
+const formatV1Product = (product: any): Product => {
+  const baseProduct = {
+    id: product._id,
+    name: product.name,
+    price: product.price,
+    imageUrl: product.mediaItems?.[0]?.url || 'https://placehold.co/200x200/jpg'
+  };
+  
+  // הוספת תמיכה בווריאנטים עבור Catalog V1
+  if (product.variants && product.variants.length > 0) {
+    return {
+      ...baseProduct,
+      variants: product.variants.map((variant: any) => ({
+        id: variant.variantId,
+        attributes: variant.attributes,
+        inStock: variant.inStock,
+        quantity: variant.quantity
+      }))
+    };
+  }
+  
+  return baseProduct;
+};
 
 // Format a Catalog V3 product to our app's format
-const formatV3Product = (product: any): Product => ({
-  id: product.id,
-  name: product.name,
-  price: product.price.price,
-  imageUrl: product.media?.mainMedia?.image?.url || 'https://placehold.co/200x200/jpg'
-});
+const formatV3Product = (product: any): Product => {
+  const baseProduct = {
+    id: product.id,
+    name: product.name,
+    price: product.price.price,
+    imageUrl: product.media?.mainMedia?.image?.url || 'https://placehold.co/200x200/jpg'
+  };
+  
+  // הוספת תמיכה בווריאנטים עבור Catalog V3
+  if (product.variants && product.variants.length > 0) {
+    return {
+      ...baseProduct,
+      variants: product.variants.map((variant: any) => ({
+        id: variant.id,
+        attributes: variant.choices, // בגרסה V3 זה נקרא choices במקום attributes
+        inStock: variant.stock.inStock,
+        quantity: variant.stock.quantity,
+        price: variant.variant_price?.price // V3 תומך במחירים שונים לווריאנטים
+      }))
+    };
+  }
+  
+  return baseProduct;
+};
 
 // Try to detect if we're using Catalog V3 based on the product structure
 const isCatalogV3Product = (product: any): boolean => {
@@ -84,6 +119,42 @@ export const fetchWixProducts = async (): Promise<Product[]> => {
     // Return mock data as fallback
     return generateMockProducts(20);
   }
+};
+
+// עדכון המלאי של הווריאנטים עבור מוצרים בבאנדל
+export const checkBundleVariantsAvailability = (products: Product[]): boolean => {
+  // בדיקה אם יש מספיק מלאי מכל הווריאנטים שנבחרו לבאנדל
+  for (const product of products) {
+    if (product.variants && product.variants.length > 0) {
+      // אם לפחות ווריאנט אחד במלאי, המוצר זמין
+      const hasAvailableVariant = product.variants.some(variant => variant.inStock && variant.quantity > 0);
+      if (!hasAvailableVariant) return false;
+    }
+  }
+  return true;
+};
+
+// חישוב המלאי המקסימלי עבור באנדל (לפי המוצר/ווריאנט עם המלאי הנמוך ביותר)
+export const calculateMaxBundleQuantity = (products: Product[]): number => {
+  let maxQuantity = Infinity;
+  
+  for (const product of products) {
+    if (product.variants && product.variants.length > 0) {
+      // מצא את הווריאנט עם המלאי הגבוה ביותר
+      const maxVariantQuantity = Math.max(
+        ...product.variants
+          .filter(variant => variant.inStock)
+          .map(variant => variant.quantity || 0)
+      );
+      
+      maxQuantity = Math.min(maxQuantity, maxVariantQuantity);
+    } else {
+      // אם אין ווריאנטים, השתמש במלאי הרגיל של המוצר (נגדיר כ-Infinity כי אין לנו מידע)
+      maxQuantity = Math.min(maxQuantity, Infinity);
+    }
+  }
+  
+  return isFinite(maxQuantity) ? maxQuantity : 0;
 };
 
 // Format price according to Wix settings
