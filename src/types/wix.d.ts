@@ -1,9 +1,17 @@
-
 interface WixCatalogV1Product {
   _id: string;
   name: string;
   price: number;
   mediaItems?: Array<{ url: string }>;
+  variants?: Array<{
+    variantId: string;
+    attributes: {
+      [key: string]: string;
+    };
+    visible: boolean;
+    inStock: boolean;
+    quantity: number;
+  }>;
 }
 
 interface WixCatalogV3Product {
@@ -21,6 +29,20 @@ interface WixCatalogV3Product {
       };
     };
   };
+  variants?: Array<{
+    id: string;
+    choices: {
+      [key: string]: string;
+    };
+    stock: {
+      inStock: boolean;
+      quantity: number;
+    };
+    variant_price?: {
+      price: number;
+      currency: string;
+    };
+  }>;
 }
 
 interface WixSettings {
