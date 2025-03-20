@@ -1,4 +1,3 @@
-
 import { generateMockProducts } from './bundleUtils';
 import type { Product, ProductVariant } from '../components/BundleCard';
 
@@ -38,7 +37,7 @@ const formatV1Product = (product: any): Product => {
     imageUrl: product.mediaItems?.[0]?.url || 'https://placehold.co/200x200/jpg'
   };
   
-  // הוספת תמיכה בווריאנטים עבור Catalog V1
+  // Add variants support for Catalog V1
   if (product.variants && product.variants.length > 0) {
     baseProduct.variants = product.variants.map((variant: any): ProductVariant => ({
       id: variant.variantId,
@@ -60,14 +59,14 @@ const formatV3Product = (product: any): Product => {
     imageUrl: product.media?.mainMedia?.image?.url || 'https://placehold.co/200x200/jpg'
   };
   
-  // הוספת תמיכה בווריאנטים עבור Catalog V3
+  // Add variants support for Catalog V3
   if (product.variants && product.variants.length > 0) {
     baseProduct.variants = product.variants.map((variant: any): ProductVariant => ({
       id: variant.id,
-      attributes: variant.choices, // בגרסה V3 זה נקרא choices במקום attributes
+      attributes: variant.choices, // V3 uses 'choices' instead of 'attributes'
       inStock: variant.stock.inStock,
       quantity: variant.stock.quantity,
-      price: variant.variant_price?.price // V3 תומך במחירים שונים לווריאנטים
+      price: variant.variant_price?.price // V3 supports different prices for variants
     }));
   }
   
@@ -115,12 +114,12 @@ export const fetchWixProducts = async (): Promise<Product[]> => {
   }
 };
 
-// עדכון המלאי של הווריאנטים עבור מוצרים בבאנדל
+// Check bundle variants availability
 export const checkBundleVariantsAvailability = (products: Product[]): boolean => {
-  // בדיקה אם יש מספיק מלאי מכל הווריאנטים שנבחרו לבאנדל
+  // Check if there's enough inventory of all selected variants for the bundle
   for (const product of products) {
     if (product.variants && product.variants.length > 0) {
-      // אם לפחות ווריאנט אחד במלאי, המוצר זמין
+      // If at least one variant is in stock, the product is available
       const hasAvailableVariant = product.variants.some(variant => variant.inStock && variant.quantity > 0);
       if (!hasAvailableVariant) return false;
     }
@@ -128,13 +127,13 @@ export const checkBundleVariantsAvailability = (products: Product[]): boolean =>
   return true;
 };
 
-// חישוב המלאי המקסימלי עבור באנדל (לפי המוצר/ווריאנט עם המלאי הנמוך ביותר)
+// Calculate the maximum bundle quantity based on available inventory
 export const calculateMaxBundleQuantity = (products: Product[]): number => {
   let maxQuantity = Infinity;
   
   for (const product of products) {
     if (product.variants && product.variants.length > 0) {
-      // מצא את הווריאנט עם המלאי הגבוה ביותר
+      // Find the variant with the highest inventory
       const maxVariantQuantity = Math.max(
         ...product.variants
           .filter(variant => variant.inStock)
@@ -143,7 +142,7 @@ export const calculateMaxBundleQuantity = (products: Product[]): number => {
       
       maxQuantity = Math.min(maxQuantity, maxVariantQuantity);
     } else {
-      // אם אין ווריאנטים, השתמש במלאי הרגיל של המוצר (נגדיר כ-Infinity כי אין לנו מידע)
+      // If no variants, use the regular product inventory (set as Infinity since we don't have that info)
       maxQuantity = Math.min(maxQuantity, Infinity);
     }
   }

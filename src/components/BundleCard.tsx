@@ -19,11 +19,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import AnimatedContainer from "./AnimatedContainer";
 
+export interface ProductVariant {
+  id: string;
+  attributes?: Record<string, string>;
+  choices?: Record<string, string>;
+  inStock: boolean;
+  quantity: number;
+  price?: number;
+}
+
 export interface Product {
   id: string;
   name: string;
   price: number;
   imageUrl: string;
+  variants?: ProductVariant[];
 }
 
 export interface Bundle {

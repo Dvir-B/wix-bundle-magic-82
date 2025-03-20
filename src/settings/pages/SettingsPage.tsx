@@ -1,155 +1,121 @@
 
-import React, { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { toast } from 'sonner';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { Slider } from "@/components/ui/slider";
+import Header from "@/components/Header";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import Header from '@/components/Header';
-import { getWixSettings } from '@/utils/wixUtils';
-
-const formSchema = z.object({
-  currencySymbol: z.string().min(1, {
-    message: 'Currency symbol is required',
-  }),
-  defaultDiscountPercentage: z.coerce.number().min(0).max(100, {
-    message: 'Discount must be between 0 and 100',
-  }),
-});
-
-export default function SettingsPage() {
-  const [isLoading, setIsLoading] = useState(true);
+const SettingsPage = () => {
+  const [currencySymbol, setCurrencySymbol] = useState('$');
+  const [defaultDiscount, setDefaultDiscount] = useState(10);
+  const [updateInventory, setUpdateInventory] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      currencySymbol: '$',
-      defaultDiscountPercentage: 10,
-    },
-  });
-
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const settings = await getWixSettings();
-        
-        form.reset({
-          currencySymbol: settings?.currencySymbol || '$',
-          defaultDiscountPercentage: settings?.defaultDiscountPercentage || 10,
-        });
-        
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error loading settings:', error);
-        toast.error('Failed to load settings');
-        setIsLoading(false);
-      }
-    };
-    
-    loadSettings();
-  }, [form]);
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const handleSaveSettings = () => {
     setIsSaving(true);
     
-    // In a real app, you would save to Wix settings here
+    // Simulate API call
     setTimeout(() => {
-      toast.success('Settings saved successfully');
+      toast.success("Settings saved successfully");
       setIsSaving(false);
-    }, 1000);
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p>טוען הגדרות...</p>
-        </div>
-      </div>
-    );
-  }
+    }, 800);
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <main className="pt-24 px-6 md:px-12 pb-16 max-w-7xl mx-auto">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-bold tracking-tight mb-6">App Settings</h1>
+        <div className="flex flex-col gap-8">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+            <p className="text-muted-foreground mt-2">
+              Configure your bundle app settings
+            </p>
+          </div>
           
           <Card>
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
               <CardDescription>
-                Configure general settings for your bundle app
+                Configure general settings for your bundles
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="currencySymbol"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Currency Symbol</FormLabel>
-                        <FormControl>
-                          <Input placeholder="$" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Symbol used for displaying prices (e.g., $, €, ₪)
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="currency">Currency Symbol</Label>
+                  <Input 
+                    id="currency" 
+                    value={currencySymbol} 
+                    onChange={(e) => setCurrencySymbol(e.target.value)}
+                    maxLength={3}
                   />
-                  
-                  <FormField
-                    control={form.control}
-                    name="defaultDiscountPercentage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Default Discount Percentage</FormLabel>
-                        <FormControl>
-                          <Input 
-                            type="number" 
-                            min={0} 
-                            max={100} 
-                            placeholder="10" 
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Default discount percentage for new bundles
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                  <p className="text-sm text-muted-foreground">
+                    Symbol displayed for prices
+                  </p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <Label htmlFor="discount">Default Discount</Label>
+                    <span className="text-sm">{defaultDiscount}%</span>
+                  </div>
+                  <Slider 
+                    id="discount"
+                    min={0}
+                    max={50}
+                    step={1}
+                    value={[defaultDiscount]}
+                    onValueChange={(value) => setDefaultDiscount(value[0])}
                   />
-                  
-                  <Button type="submit" disabled={isSaving}>
-                    {isSaving ? 'Saving...' : 'Save Settings'}
-                  </Button>
-                </form>
-              </Form>
+                  <p className="text-sm text-muted-foreground">
+                    Default discount applied to new bundles
+                  </p>
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Inventory Settings</h3>
+                
+                <div className="flex items-center justify-between space-x-2">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="update-inventory">Update Inventory</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Automatically update product inventory when bundles are purchased
+                    </p>
+                  </div>
+                  <Switch
+                    id="update-inventory"
+                    checked={updateInventory}
+                    onCheckedChange={setUpdateInventory}
+                  />
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="flex justify-end">
+                <Button 
+                  onClick={handleSaveSettings}
+                  disabled={isSaving}
+                >
+                  {isSaving ? "Saving..." : "Save Settings"}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
       </main>
     </div>
   );
-}
+};
+
+export default SettingsPage;
