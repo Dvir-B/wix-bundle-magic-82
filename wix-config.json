@@ -8,14 +8,14 @@
         {
           "name": "Bundles Dashboard",
           "url": "/dashboard",
-          "seoTitle": "Manage Product Bundles",
-          "seoDescription": "Create and manage product bundles for your Wix store"
+          "seoTitle": "ניהול חבילות מוצרים",
+          "seoDescription": "צור ונהל חבילות מוצרים לחנות ה-Wix שלך"
         },
         {
           "name": "Create Bundle",
           "url": "/dashboard/create-bundle",
-          "seoTitle": "Create New Bundle",
-          "seoDescription": "Create a new product bundle for your Wix store"
+          "seoTitle": "יצירת חבילה חדשה",
+          "seoDescription": "צור חבילת מוצרים חדשה לחנות ה-Wix שלך"
         }
       ]
     },
@@ -24,26 +24,26 @@
         {
           "name": "App Settings",
           "url": "/settings",
-          "seoTitle": "App Settings",
-          "seoDescription": "Configure your bundle app settings"
+          "seoTitle": "הגדרות האפליקציה",
+          "seoDescription": "הגדר את הגדרות אפליקציית החבילות שלך"
         }
       ],
       "specs": {
         "sections": [
           {
-            "title": "General Settings",
+            "title": "הגדרות כלליות",
             "settings": [
               {
                 "name": "currencySymbol",
                 "type": "string",
-                "label": "Currency Symbol",
-                "defaultValue": "$",
+                "label": "סמל מטבע",
+                "defaultValue": "₪",
                 "required": true
               },
               {
                 "name": "defaultDiscountPercentage",
                 "type": "number",
-                "label": "Default Discount Percentage",
+                "label": "אחוז הנחה ברירת מחדל",
                 "defaultValue": 10,
                 "required": true
               }
@@ -62,7 +62,7 @@
   "capabilities": {
     "dataHooks": {
       "bundles": {
-        "description": "Store and manage product bundles"
+        "description": "אחסון וניהול חבילות מוצרים"
       }
     }
   }
