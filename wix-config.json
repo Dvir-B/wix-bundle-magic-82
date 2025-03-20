@@ -3,23 +3,31 @@
   "name": "wix-bundle-magic",
   "version": "1.0.0",
   "modules": {
-    "pages": {
+    "dashboard": {
       "pages": [
         {
           "name": "Bundles Dashboard",
-          "url": "/bundles",
+          "url": "/dashboard",
           "seoTitle": "Manage Product Bundles",
           "seoDescription": "Create and manage product bundles for your Wix store"
         },
         {
           "name": "Create Bundle",
-          "url": "/create-bundle",
+          "url": "/dashboard/create-bundle",
           "seoTitle": "Create New Bundle",
           "seoDescription": "Create a new product bundle for your Wix store"
         }
       ]
     },
     "settings": {
+      "pages": [
+        {
+          "name": "App Settings",
+          "url": "/settings",
+          "seoTitle": "App Settings",
+          "seoDescription": "Configure your bundle app settings"
+        }
+      ],
       "specs": {
         "sections": [
           {

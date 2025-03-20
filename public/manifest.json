@@ -1,0 +1,17 @@
+
+{
+  "name": "Wix Bundle Magic",
+  "description": "Create and manage product bundles for your Wix store",
+  "version": "1.0.0",
+  "author": {
+    "name": "Lovable Apps",
+    "email": "support@example.com",
+    "url": "https://example.com"
+  },
+  "icons": {
+    "16x16": "icons/icon16.png",
+    "32x32": "icons/icon32.png",
+    "128x128": "icons/icon128.png",
+    "512x512": "icons/icon512.png"
+  }
+}
